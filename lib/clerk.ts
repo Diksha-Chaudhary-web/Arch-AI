@@ -28,18 +28,20 @@ export const clerkAppearance = {
 
 export function getClerkPath(pathname: string | undefined, fallback: string) {
   if (!pathname) {
-    return fallback
+     return normalizePath(fallback)
   }
 
   if (pathname.startsWith("http://") || pathname.startsWith("https://")) {
+    const normalizePath = (value: string) =>
+    value.startsWith("/") ? value : `/${value}`;
      try {
       return new URL(pathname).pathname || fallback
     } catch {
-      return fallback
+      return normalizePath(fallback)
     }
   }
 
-  return pathname.startsWith("/") ? pathname : `/${pathname}`
+   return normalizePath(pathname)
 }
 
 export function getClerkRouteMatcher(

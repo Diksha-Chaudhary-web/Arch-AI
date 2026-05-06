@@ -52,6 +52,7 @@ When session tasks are enabled (e.g., forced password reset, MFA setup), users m
 
 ```typescript
 import { NextResponse } from 'next/server';
+import { clerkMiddleware } from '@clerk/nextjs/server';
 export default clerkMiddleware(async (auth, req) => {
   const { sessionStatus } = await auth();
 
