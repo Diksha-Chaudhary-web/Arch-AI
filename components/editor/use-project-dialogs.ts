@@ -132,7 +132,7 @@ export function useProjectDialogs() {
     await waitForMockAction()
 
     const newProject: ProjectRecord = {
-      id: `proj-${slugifyProjectName(trimmedName)}`,
+      id: `proj-${slugifyProjectName(trimmedName)}-${Date.now()}`,
       name: trimmedName,
       slug: slugifyProjectName(trimmedName),
       ownership: "owned",
