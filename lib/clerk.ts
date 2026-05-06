@@ -32,10 +32,14 @@ export function getClerkPath(pathname: string | undefined, fallback: string) {
   }
 
   if (pathname.startsWith("http://") || pathname.startsWith("https://")) {
-    return new URL(pathname).pathname
+     try {
+      return new URL(pathname).pathname || fallback
+    } catch {
+      return fallback
+    }
   }
 
-  return pathname
+  return pathname.startsWith("/") ? pathname : `/${pathname}`
 }
 
 export function getClerkRouteMatcher(

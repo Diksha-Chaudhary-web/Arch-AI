@@ -12,7 +12,9 @@ export async function createPost(formData: FormData) {
   const { isAuthenticated, userId } = await auth();
   if (!isAuthenticated) throw new Error('Unauthorized');
 
-  const title = formData.get('title') as string;
+   const rawTitle = formData.get('title');
+  const title = typeof rawTitle === 'string' ? rawTitle.trim() : '';
+  if (!title) throw new Error('Title is required');
   await db.posts.create({ data: { title, authorId: userId } });
   revalidatePath('/posts');
 }

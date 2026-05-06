@@ -51,6 +51,7 @@ export default clerkMiddleware(async (auth, req) => {
 When session tasks are enabled (e.g., forced password reset, MFA setup), users may have a `pending` session status. You can handle this in middleware:
 
 ```typescript
+import { NextResponse } from 'next/server';
 export default clerkMiddleware(async (auth, req) => {
   const { sessionStatus } = await auth();
 

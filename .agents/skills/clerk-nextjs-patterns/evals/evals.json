@@ -43,7 +43,7 @@
     {
       "id": 4,
       "prompt": "i need to protect all routes under /dashboard with clerk middleware instead of checking auth in each page component. update the middleware to use createRouteMatcher so only / and /sign-in are public.",
-      "expected_output": "Updates middleware.ts to use createRouteMatcher with public routes, protecting /dashboard and all sub-routes",
+      "expected_output": "Updates proxy.ts (or middleware.ts for older Next.js versions) to use createRouteMatcher with public routes, protecting /dashboard and all sub-routes",
       "scaffold": "nextjs-basic-auth",
       "expectations": [
         "Imports createRouteMatcher from @clerk/nextjs/server",
@@ -60,7 +60,7 @@
       "scaffold": "nextjs-basic-auth",
       "expectations": [
         "Uses getToken with a template parameter (e.g. 'hasura') to get a custom JWT",
-        "Uses either auth() server-side or useAuth() client-side to access getToken",
+        "Uses auth() server-side to access getToken in the server component flow",
         "Passes the token as Authorization Bearer header to the external API call",
         "Handles the case where getToken returns null (user not authenticated)"
       ]
