@@ -26,14 +26,13 @@ export function EditorShell() {
           <div className="relative flex h-full w-full max-w-6xl items-center justify-center rounded-[2rem] border border-border/70 bg-card/55 shadow-[0_30px_120px_rgba(0,0,0,0.35)] backdrop-blur-sm">
             <div className="space-y-3 px-6 text-center">
               <p className="text-xs font-medium tracking-[0.2em] text-muted-foreground uppercase">
-                Editor Canvas
+                Welcome to Arch-AI
               </p>
               <h1 className="text-2xl font-semibold text-foreground">
-                Base editor chrome is ready
+                Workspace
               </h1>
               <p className="max-w-xl text-sm leading-6 text-muted-foreground">
-                The shared navbar, floating project sidebar, and dialog styling
-                pattern are now in place for the feature work that follows.
+                This is your workspace where you can create and manage your projects. Use the sidebar to navigate between projects and access your settings.
               </p>
             </div>
           </div>
