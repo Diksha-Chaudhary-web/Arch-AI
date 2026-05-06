@@ -1,9 +1,6 @@
 
+import { EditorShell } from "@/components/editor/editor-shell"
+
 export default function Home() {
-  return (
-    <div className="flex h-screen items-center justify-center">
-      <div>Arch AI</div>
-      
-    </div>
-  );
+  return <EditorShell />
 }
