@@ -1,12 +1,33 @@
 "use client"
 
+import { Plus } from "lucide-react"
 import { useState } from "react"
 
 import { EditorNavbar } from "@/components/editor/editor-navbar"
+import { ProjectDialogs } from "@/components/editor/project-dialogs"
 import { ProjectSidebar } from "@/components/editor/project-sidebar"
+import { useProjectDialogs } from "@/components/editor/use-project-dialogs"
+import { Button } from "@/components/ui/button"
 
 export function EditorShell() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
+  const {
+    activeDialog,
+    closeDialog,
+    isLoading,
+    openCreateDialog,
+    openDeleteDialog,
+    openRenameDialog,
+    ownedProjects,
+    projectName,
+    selectedProject,
+    setProjectName,
+    sharedProjects,
+    slugPreview,
+    submitCreate,
+    submitDelete,
+    submitRename,
+  } = useProjectDialogs()
 
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">
@@ -16,27 +37,56 @@ export function EditorShell() {
       />
 
       <main className="relative flex-1 overflow-hidden">
+        <button
+          type="button"
+          className={`absolute inset-0 z-20 bg-black/45 transition-opacity duration-200 sm:hidden ${
+            isSidebarOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
+          }`}
+          onClick={() => setIsSidebarOpen(false)}
+          aria-label="Close project sidebar backdrop"
+        />
+
         <ProjectSidebar
           isOpen={isSidebarOpen}
           onClose={() => setIsSidebarOpen(false)}
+          ownedProjects={ownedProjects}
+          sharedProjects={sharedProjects}
+          onCreateProject={openCreateDialog}
+          onDeleteProject={openDeleteDialog}
+          onRenameProject={openRenameDialog}
         />
 
         <section className="relative flex h-full min-h-[calc(100vh-3.5rem)] items-center justify-center overflow-hidden px-6 py-10">
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,color-mix(in_srgb,var(--accent-soft)_52%,transparent),transparent_34%),radial-gradient(circle_at_bottom_right,color-mix(in_srgb,var(--accent-primary)_16%,transparent),transparent_28%)]" />
-          <div className="relative flex h-full w-full max-w-6xl items-center justify-center rounded-[2rem] border border-border/70 bg-card/55 shadow-[0_30px_120px_rgba(0,0,0,0.35)] backdrop-blur-sm">
-            <div className="space-y-3 px-6 text-center">
-              <p className="text-xs font-medium tracking-[0.2em] text-muted-foreground uppercase">
-                Welcome to Arch-AI
-              </p>
-              <h1 className="text-2xl font-semibold text-foreground">
-                Workspace
+          <div className="relative flex w-full max-w-2xl flex-col items-center justify-center text-center">
+            <div className="space-y-4">
+              <h1 className="text-3xl font-semibold text-foreground">
+                Create a project or open an existing one
               </h1>
               <p className="max-w-xl text-sm leading-6 text-muted-foreground">
-                This is your workspace where you can create and manage your projects. Use the sidebar to navigate between projects and access your settings.
+                Start a new architecture workspace, or choose a project from the sidebar.
               </p>
             </div>
+
+            <Button className="mt-6" size="lg" onClick={openCreateDialog}>
+              <Plus data-icon="inline-start" />
+              New Project
+            </Button>
           </div>
         </section>
+
+        <ProjectDialogs
+          activeDialog={activeDialog}
+          currentProjectName={selectedProject?.name}
+          isLoading={isLoading}
+          projectName={projectName}
+          slugPreview={slugPreview}
+          onClose={closeDialog}
+          onCreateSubmit={submitCreate}
+          onDeleteSubmit={submitDelete}
+          onProjectNameChange={setProjectName}
+          onRenameSubmit={submitRename}
+        />
       </main>
     </div>
   )

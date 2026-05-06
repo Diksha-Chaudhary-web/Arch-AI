@@ -28,7 +28,7 @@ export const clerkAppearance = {
 
 export function getClerkPath(pathname: string | undefined, fallback: string) {
   if (!pathname) {
-     return normalizePath(fallback)
+     return (fallback)
   }
 
   if (pathname.startsWith("http://") || pathname.startsWith("https://")) {
@@ -41,7 +41,7 @@ export function getClerkPath(pathname: string | undefined, fallback: string) {
     }
   }
 
-   return normalizePath(pathname)
+   return (pathname)
 }
 
 export function getClerkRouteMatcher(
