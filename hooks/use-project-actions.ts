@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation"
 import { useMemo, useState } from "react"
 
 import type { ProjectListItem } from "@/lib/project-types"
-import { NextResponse } from "next/dist/server/web/spec-extension/response"
+
 
 type DialogMode = "create" | "rename" | "delete" | null
 
@@ -118,10 +118,45 @@ export function useProjectActions({
   }
 
   const [error, setError] = useState<string | null>(null)
+  const submitCreate = async () => {
+    const trimmedName = projectName.trim()
 
- if (!selectedProject) {
-   return NextResponse.json({ error: "Project not found" }, { status: 404 })
- }
+    if (!trimmedName) {
+      return
+    }
+
+    setIsLoading(true)
+    setError(null)
+
+    try {
+      const response = await fetch("/api/projects", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: roomIdPreview,
+          name: trimmedName,
+        }),
+      })
+
+      if (!response.ok) {
+        setError(await parseProjectError(response))
+        return
+      }
+
+      const payload = (await response.json()) as {
+        project: { id: string }
+      }
+
+      resetDialogState()
+      router.push(`/editor/${payload.project.id}`)
+      router.refresh()
+    } finally {
+      setIsLoading(false)
+    }
+  }
+ 
 
   const submitRename = async () => {
     const trimmedName = projectName.trim()
@@ -131,6 +166,7 @@ export function useProjectActions({
     }
 
     setIsLoading(true)
+
 
     try {
       const response = await fetch(`/api/projects/${selectedProject.id}`, {
