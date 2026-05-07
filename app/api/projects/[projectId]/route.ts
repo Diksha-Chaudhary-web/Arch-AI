@@ -89,6 +89,10 @@ export async function PATCH(
    select: projectSelect,
  })
 
+ if (!updatedProject) {
+   return NextResponse.json({ error: "Project not found" }, { status: 404 })
+ }
+
   return NextResponse.json({ project: updatedProject })
 }
 
