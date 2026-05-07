@@ -5,17 +5,15 @@ import { Pencil, Plus, Trash2, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { cn } from "@/lib/utils"
-import type { ProjectListItem } from "@/lib/project-types"
+import type { ProjectRecord } from "@/components/editor/use-project-dialogs"
 
 type ProjectSidebarProps = {
-  activeProjectId?: string | null
   isOpen: boolean
   onClose: () => void
-  ownedProjects: ProjectListItem[]
-  sharedProjects: ProjectListItem[]
+  ownedProjects: ProjectRecord[]
+  sharedProjects: ProjectRecord[]
   onCreateProject: () => void
   onDeleteProject: (projectId: string) => void
-  onOpenProject: (projectId: string) => void
   onRenameProject: (projectId: string) => void
 }
 
@@ -32,16 +30,12 @@ function EmptyProjectsState({ title, description }: { title: string; description
 
 function ProjectList({
   projects,
-  activeProjectId,
   onDeleteProject,
-  onOpenProject,
   onRenameProject,
   showActions,
 }: {
-  activeProjectId?: string | null
-  projects: ProjectListItem[]
+  projects: ProjectRecord[]
   onDeleteProject: (projectId: string) => void
-  onOpenProject: (projectId: string) => void
   onRenameProject: (projectId: string) => void
   showActions: boolean
 }) {
@@ -50,24 +44,21 @@ function ProjectList({
       {projects.map((project) => (
         <div
           key={project.id}
-          className={cn(
-            "flex items-start justify-between gap-3 rounded-xl border px-3 py-3 transition-colors",
-            project.id === activeProjectId
-              ? "border-accent-primary/50 bg-accent-soft/35"
-              : "border-border/70 bg-background/50"
-          )}
+          className="flex items-start justify-between gap-3 rounded-xl border border-border/70 bg-background/50 px-3 py-3"
         >
-          <button
-            type="button"
-            className="min-w-0 flex-1 space-y-1 text-left"
-            onClick={() => onOpenProject(project.id)}
-          >
-            <p className="truncate text-sm font-medium text-foreground">{project.name}</p>
-            <p className="truncate font-mono text-xs text-muted-foreground">{project.id}</p>
+          <div className="min-w-0 space-y-1">
+            <p className="truncate text-sm font-medium text-foreground">
+              {project.name}
+            </p>
+            <p className="truncate font-mono text-xs text-muted-foreground">
+              {project.slug}
+            </p>
             {project.collaboratorLabel ? (
-              <p className="text-xs text-muted-foreground">{project.collaboratorLabel}</p>
+              <p className="text-xs text-muted-foreground">
+                {project.collaboratorLabel}
+              </p>
             ) : null}
-          </button>
+          </div>
 
           {showActions ? (
             <div className="flex shrink-0 items-center gap-1">
@@ -96,14 +87,12 @@ function ProjectList({
 }
 
 export function ProjectSidebar({
-  activeProjectId,
   isOpen,
   onClose,
   ownedProjects,
   sharedProjects,
   onCreateProject,
   onDeleteProject,
-  onOpenProject,
   onRenameProject,
 }: ProjectSidebarProps) {
   return (
@@ -144,10 +133,8 @@ export function ProjectSidebar({
           <TabsContent value="my-projects" className="mt-4 min-h-0 flex-1">
             {ownedProjects.length > 0 ? (
               <ProjectList
-                activeProjectId={activeProjectId}
                 projects={ownedProjects}
                 onDeleteProject={onDeleteProject}
-                onOpenProject={onOpenProject}
                 onRenameProject={onRenameProject}
                 showActions
               />
@@ -162,10 +149,8 @@ export function ProjectSidebar({
           <TabsContent value="shared" className="mt-4 min-h-0 flex-1">
             {sharedProjects.length > 0 ? (
               <ProjectList
-                activeProjectId={activeProjectId}
                 projects={sharedProjects}
                 onDeleteProject={onDeleteProject}
-                onOpenProject={onOpenProject}
                 onRenameProject={onRenameProject}
                 showActions={false}
               />
