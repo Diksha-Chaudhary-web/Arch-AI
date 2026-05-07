@@ -20,7 +20,7 @@ function createPrismaClient() {
     );
   }
 
-  const adapter = new PrismaPg(databaseUrl);
+  const adapter = new PrismaPg({ connectionString: databaseUrl });
 
   return new PrismaClient({ adapter });
 }
