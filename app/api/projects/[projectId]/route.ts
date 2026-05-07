@@ -24,6 +24,13 @@ async function requireUserId() {
   return userId
 }
 
+async function loadProject(projectId: string) {
+  return prisma.project.findUnique({
+    where: { id: projectId },
+    select: projectSelect,
+  })
+}
+
 export async function PATCH(
   request: Request,
   context: { params: Promise<{ projectId: string }> }
@@ -35,10 +42,7 @@ export async function PATCH(
   }
 
   const { projectId } = await context.params
-  const project = await prisma.project.findUnique({
-    where: { id: projectId },
-    select: projectSelect,
-  })
+  const project = await loadProject(projectId)
 
   if (!project) {
     return NextResponse.json({ error: "Project not found" }, { status: 404 })
@@ -65,11 +69,25 @@ export async function PATCH(
     )
   }
 
-  const updatedProject = await prisma.project.update({
-    where: { id: projectId },
-    data: { name },
-    select: projectSelect,
-  })
+   const updateResult = await prisma.project.updateMany({
+   where: { id: projectId, ownerId: userId },
+   data: { name },
+ })
+
+ if (updateResult.count === 0) {
+  const exists = await prisma.project.findUnique({
+       where: { id: projectId },
+     select: { id: true },
+   })
+   return NextResponse.json(
+     { error: exists ? "Forbidden" : "Project not found" },
+     { status: exists ? 403 : 404 }
+   )
+ }
+ const updatedProject = await prisma.project.findUnique({
+   where: { id: projectId },
+   select: projectSelect,
+ })
 
   return NextResponse.json({ project: updatedProject })
 }
@@ -85,10 +103,7 @@ export async function DELETE(
   }
 
   const { projectId } = await context.params
-  const project = await prisma.project.findUnique({
-    where: { id: projectId },
-    select: projectSelect,
-  })
+  const project = await loadProject(projectId)
 
   if (!project) {
     return NextResponse.json({ error: "Project not found" }, { status: 404 })
@@ -98,9 +113,19 @@ export async function DELETE(
     return NextResponse.json({ error: "Forbidden" }, { status: 403 })
   }
 
-  await prisma.project.delete({
-    where: { id: projectId },
-  })
+  const deleteResult = await prisma.project.deleteMany({
+   where: { id: projectId, ownerId: userId },
+ })
+ if (deleteResult.count === 0) {
+   const exists = await prisma.project.findUnique({
+     where: { id: projectId },
+     select: { id: true },
+   })
+   return NextResponse.json(
+     { error: exists ? "Forbidden" : "Project not found" },
+     { status: exists ? 403 : 404 }
+   )
+ }
 
   return new NextResponse(null, { status: 204 })
 }

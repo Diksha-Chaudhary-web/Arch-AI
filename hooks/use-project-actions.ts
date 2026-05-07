@@ -116,6 +116,8 @@ export function useProjectActions({
     setActiveDialog("delete")
   }
 
+  const [error, setError] = useState<string | null>(null)
+
   const submitCreate = async () => {
     const trimmedName = projectName.trim()
 
@@ -124,6 +126,7 @@ export function useProjectActions({
     }
 
     setIsLoading(true)
+    setError(null)
 
     try {
       const response = await fetch("/api/projects", {
@@ -138,7 +141,8 @@ export function useProjectActions({
       })
 
       if (!response.ok) {
-        throw new Error(await parseProjectError(response))
+        setError(await parseProjectError(response))
+        return
       }
 
       const payload = (await response.json()) as {
@@ -174,11 +178,14 @@ export function useProjectActions({
       })
 
       if (!response.ok) {
-        throw new Error(await parseProjectError(response))
+        setError(await parseProjectError(response))
+        return
       }
 
       resetDialogState()
       router.refresh()
+    } catch (err) {
+      setError("Network error. Please try again.")
     } finally {
       setIsLoading(false)
     }
@@ -197,7 +204,8 @@ export function useProjectActions({
       })
 
       if (!response.ok) {
-        throw new Error(await parseProjectError(response))
+        setError(await parseProjectError(response))
+        return
       }
 
       resetDialogState()
