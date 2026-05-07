@@ -18,7 +18,7 @@ type ProjectDialogsProps = {
   currentProjectName?: string
   isLoading: boolean
   projectName: string
-  slugPreview: string
+  roomIdPreview: string
   onClose: () => void
   onCreateSubmit: () => Promise<void>
   onDeleteSubmit: () => Promise<void>
@@ -31,7 +31,7 @@ export function ProjectDialogs({
   currentProjectName,
   isLoading,
   projectName,
-  slugPreview,
+  roomIdPreview,
   onClose,
   onCreateSubmit,
   onDeleteSubmit,
@@ -65,8 +65,7 @@ export function ProjectDialogs({
             <DialogHeader>
               <DialogTitle>Create Project</DialogTitle>
               <DialogDescription>
-                Start a new architecture workspace and confirm its generated
-                slug before you continue.
+                Start a new architecture workspace and confirm its generated room ID before you continue.
               </DialogDescription>
             </DialogHeader>
 
@@ -85,10 +84,10 @@ export function ProjectDialogs({
 
             <div className="rounded-lg border border-border/70 bg-muted/40 px-3 py-2">
               <p className="text-xs font-medium tracking-[0.12em] text-muted-foreground uppercase">
-                Slug preview
+                Room ID preview
               </p>
               <p className="mt-1 font-mono text-sm text-foreground">
-                {slugPreview}
+                {roomIdPreview}
               </p>
             </div>
 
@@ -158,7 +157,7 @@ export function ProjectDialogs({
             <DialogHeader>
               <DialogTitle>Delete Project</DialogTitle>
               <DialogDescription>
-                Delete <span className="font-medium text-foreground">{projectLabel}</span> from this mock workspace.
+                Delete <span className="font-medium text-foreground">{projectLabel}</span> from your projects.
               </DialogDescription>
             </DialogHeader>
 
