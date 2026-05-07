@@ -231,6 +231,7 @@ export function useProjectActions({
     closeDialog,
     currentProject: selectedProject,
     isLoading,
+    error,
     openCreateDialog,
     openDeleteDialog,
     openProject,
