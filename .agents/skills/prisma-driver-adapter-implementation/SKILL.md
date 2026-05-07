@@ -16,7 +16,7 @@ This skill provides everything needed to implement a Prisma ORM v7 driver adapte
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                         PrismaClient                            │
-│                     (requires adapter instance)                   │
+│                    (requires adapter instance)                  │
 └─────────────────────────────────────────────────────────────────┘
                                 │
                                 ▼
@@ -582,6 +582,7 @@ describe("E2E", () => {
     const factory = new MyAdapterFactory({ url: TEST_DB_URL });
     const adapter = await factory.connect();
     prisma = new PrismaClient({ adapter });
+  });
 
   test("CRUD operations", async () => {
     const user = await prisma.user.create({ data: { name: "Alice" } });
@@ -616,6 +617,8 @@ const factory = new MyAdapterFactory({
 
 const adapter = await factory.connect();
 const prisma = new PrismaClient({ adapter });
+
+// Use prisma normally
 const users = await prisma.user.findMany();
 
 
