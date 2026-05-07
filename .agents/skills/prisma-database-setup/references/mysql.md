@@ -92,7 +92,7 @@ If you need the MariaDB driver's text protocol instead of the default binary `ex
 import { PrismaClient } from '../generated/client'
 import { PrismaMariaDb } from '@prisma/adapter-mariadb'
 
-const adapter = new PrismaMariaDb(process.env.DATABASE_URL!, {
+const adapter = PrismaMariaDb.fromUrl(process.env.DATABASE_URL!, {
   useTextProtocol: true,
 })
 
