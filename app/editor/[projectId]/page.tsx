@@ -1,6 +1,11 @@
-import { notFound } from "next/navigation"
+import { redirect } from "next/navigation"
 
-import { EditorShell } from "@/components/editor/editor-shell"
+import { AccessDenied } from "@/components/editor/access-denied"
+import { EditorWorkspace } from "@/components/editor/editor-workspace"
+import {
+  getAccessibleProjectById,
+  getCurrentProjectIdentity,
+} from "@/lib/project-access"
 import { getProjectSidebarData } from "@/lib/project-data"
 
 export default async function ProjectEditorPage({
@@ -9,18 +14,27 @@ export default async function ProjectEditorPage({
   params: Promise<{ projectId: string }>
 }) {
   const { projectId } = await params
-  const { ownedProjects, sharedProjects } = await getProjectSidebarData()
-  const allProjects = [...ownedProjects, ...sharedProjects]
-  const activeProject = allProjects.find((project) => project.id === projectId)
+  const identity = await getCurrentProjectIdentity()
+
+  if (!identity) {
+    redirect("/sign-in")
+  }
+
+  const [activeProject, { ownedProjects, sharedProjects }] = await Promise.all([
+    getAccessibleProjectById(projectId, identity),
+    getProjectSidebarData(identity),
+  ])
 
   if (!activeProject) {
-    notFound()
+    return <AccessDenied />
   }
 
   return (
-    <EditorShell
+    <EditorWorkspace
       activeProjectId={activeProject.id}
+      canManageAccess={activeProject.accessRole === "owner"}
       ownedProjects={ownedProjects}
+      projectName={activeProject.name}
       sharedProjects={sharedProjects}
     />
   )

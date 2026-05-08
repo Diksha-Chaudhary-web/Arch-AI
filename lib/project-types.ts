@@ -5,3 +5,8 @@ export type ProjectListItem = {
   collaboratorLabel?: string
 }
 
+export type ProjectCollaboratorListItem = {
+  avatarImageUrl: string | null
+  displayName: string | null
+  email: string
+}

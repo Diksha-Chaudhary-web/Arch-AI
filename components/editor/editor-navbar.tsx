@@ -2,17 +2,22 @@
 
 import { UserButton } from "@clerk/nextjs"
 import { PanelLeftClose, PanelLeftOpen } from "lucide-react"
+import type { ReactNode } from "react"
 
 import { Button } from "@/components/ui/button"
 
 type EditorNavbarProps = {
+  centerContent?: ReactNode
   isSidebarOpen: boolean
   onSidebarToggle: () => void
+  rightContent?: ReactNode
 }
 
 export function EditorNavbar({
+  centerContent,
   isSidebarOpen,
   onSidebarToggle,
+  rightContent,
 }: EditorNavbarProps) {
   const SidebarIcon = isSidebarOpen ? PanelLeftClose : PanelLeftOpen
 
@@ -31,9 +36,12 @@ export function EditorNavbar({
         </Button>
       </div>
 
-      <div className="flex flex-1 items-center justify-center" />
+      <div className="flex min-w-0 flex-1 items-center justify-center px-4">
+        {centerContent}
+      </div>
 
-      <div className="flex flex-1 items-center justify-end">
+      <div className="flex flex-1 items-center justify-end gap-2">
+        {rightContent}
         <UserButton />
       </div>
     </header>

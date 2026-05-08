@@ -1,32 +1,23 @@
-import { auth, currentUser } from "@clerk/nextjs/server"
-
 import { prisma } from "@/lib/prisma"
+import {
+  getCurrentProjectIdentity,
+  type ProjectIdentity,
+} from "@/lib/project-access"
 import type { ProjectListItem } from "@/lib/project-types"
-
-async function getCurrentUserContext() {
-  const { userId } = await auth()
-
-  if (!userId) {
-    return null
-  }
-
-  const user = await currentUser()
-  const emailAddresses =
-    user?.emailAddresses
-      .map((emailAddress) => emailAddress.emailAddress.toLowerCase())
-      .filter(Boolean) ?? []
-
-  return {
-    emailAddresses,
-    userId,
-  }
-}
 
 export async function getProjectSidebarData(): Promise<{
   ownedProjects: ProjectListItem[]
   sharedProjects: ProjectListItem[]
+}>
+export async function getProjectSidebarData(identity: ProjectIdentity): Promise<{
+  ownedProjects: ProjectListItem[]
+  sharedProjects: ProjectListItem[]
+}>
+export async function getProjectSidebarData(identity?: ProjectIdentity | null): Promise<{
+  ownedProjects: ProjectListItem[]
+  sharedProjects: ProjectListItem[]
 }> {
-  const userContext = await getCurrentUserContext()
+  const userContext = identity ?? (await getCurrentProjectIdentity())
 
   if (!userContext) {
     return {
@@ -81,4 +72,3 @@ export async function getProjectSidebarData(): Promise<{
     })),
   }
 }
-
