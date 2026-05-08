@@ -9,6 +9,7 @@ import type { ProjectRecord } from "@/components/editor/use-project-dialogs"
 
 type ProjectSidebarProps = {
   isOpen: boolean
+  layout?: "overlay" | "docked"
   onClose: () => void
   ownedProjects: ProjectRecord[]
   sharedProjects: ProjectRecord[]
@@ -88,6 +89,7 @@ function ProjectList({
 
 export function ProjectSidebar({
   isOpen,
+  layout = "overlay",
   onClose,
   ownedProjects,
   sharedProjects,
@@ -99,11 +101,16 @@ export function ProjectSidebar({
     <aside
       id="project-sidebar"
       className={cn(
-        "absolute inset-y-0 left-0 z-30 w-full max-w-sm px-3 pb-3 pt-2 transition-transform duration-200 ease-out sm:w-[22rem]",
-        isOpen ? "translate-x-0" : "-translate-x-[calc(100%+0.75rem)]"
+        "w-full max-w-sm px-3 pb-3 pt-2 transition-transform duration-200 ease-out sm:w-[22rem]",
+        layout === "overlay"
+          ? "absolute inset-y-0 left-0 z-30"
+          : "relative z-10 h-full shrink-0 border-r border-border/70 bg-card/70",
+        isOpen ? "translate-x-0" : "-translate-x-[calc(100%+0.75rem)]",
+        layout === "docked" && "hidden md:block",
+        layout === "docked" && !isOpen && "md:-ml-[22rem]"
       )}
       aria-hidden={!isOpen}
-      inert={!isOpen}
+      inert={!isOpen && layout === "overlay"}
     >
       <div className="flex h-full flex-col overflow-hidden rounded-2xl border border-border/80 bg-popover/96 shadow-2xl shadow-black/25 backdrop-blur-md">
         <div className="flex items-center justify-between border-b border-border/80 px-4 py-4">
