@@ -70,6 +70,7 @@ export function EditorWorkspace({
               triggerIcon={<Share2 data-icon="inline-start" />}
             />
             <Button
+             className="hidden lg:inline-flex"
               variant="outline"
               size="sm"
               onClick={() => setIsAiSidebarOpen((open) => !open)}
@@ -135,23 +136,23 @@ export function EditorWorkspace({
           </div>
         </section>
 
-        <aside
-          id="ai-sidebar"
-          className={`hidden h-full w-[22rem] shrink-0 border-l border-border/70 bg-card/75 p-4 backdrop-blur-sm lg:block ${
-            isAiSidebarOpen ? "translate-x-0" : "translate-x-full"
-          }`}
-        >
-          <div className="flex h-full flex-col rounded-2xl border border-border/80 bg-popover/80 p-5">
-            <p className="text-sm font-semibold tracking-[0.08em] text-foreground uppercase">
-              AI Workspace
-            </p>
-            <div className="mt-4 flex flex-1 items-center justify-center rounded-2xl border border-dashed border-border/70 bg-background/40 px-5 text-center">
-              <p className="text-sm leading-6 text-muted-foreground">
-                AI chat and generation tools will land here in a future step.
+        {isAiSidebarOpen ? (
+          <aside
+           id="ai-sidebar"
+            className="hidden h-full w-[22rem] shrink-0 border-l border-border/70 bg-card/75 p-4 backdrop-blur-sm lg:block"
+          >
+            <div className="flex h-full flex-col rounded-2xl border border-border/80 bg-popover/80 p-5">
+              <p className="text-sm font-semibold tracking-[0.08em] text-foreground uppercase">
+                AI Workspace
               </p>
+              <div className="mt-4 flex flex-1 items-center justify-center rounded-2xl border border-dashed border-border/70 bg-background/40 px-5 text-center">
+                <p className="text-sm leading-6 text-muted-foreground">
+                  AI chat and generation tools will land here in a future step.
+                </p>
+              </div>
             </div>
-          </div>
-        </aside>
+          </aside>
+        ) : null}
 
         <ProjectDialogs
           activeDialog={activeDialog}

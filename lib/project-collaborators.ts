@@ -44,17 +44,30 @@ export async function enrichCollaboratorEmails(
     return []
   }
 
-  const client = await clerkClient()
-  const users = await client.users.getUserList({
-    emailAddress: normalizedEmails,
-    limit: normalizedEmails.length,
-  })
+  let usersData: Awaited<
+    ReturnType<Awaited<ReturnType<typeof clerkClient>>["users"]["getUserList"]>
+  >["data"] = []
+
+  try {
+    const client = await clerkClient()
+    const users = await client.users.getUserList({
+      emailAddress: normalizedEmails,
+      limit: normalizedEmails.length,
+    })
+    usersData = users.data
+  } catch {
+    return normalizedEmails.map((email) => ({
+      avatarImageUrl: null,
+      displayName: null,
+      email,
+    }))
+  }
   const collaboratorProfiles = new Map<
     string,
     Omit<ProjectCollaboratorListItem, "email">
   >()
 
-  for (const user of users.data) {
+  for (const user of usersData) {
     const displayName = getUserDisplayName(user)
     const avatarImageUrl = user.hasImage ? user.imageUrl : null
 
